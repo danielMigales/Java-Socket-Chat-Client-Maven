@@ -1,0 +1,57 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 20 may. 2020, 20:16:21
+    Author     : daniel
+*/
+
+.stageChat{
+    -fx-background-image:url("../..//migales/client_with_maven/images/ocean-bottle.jpg");
+}
+
+.sendButton{
+    -fx-background-radius: 30;
+    -fx-background-color: transparent;
+    -fx-background-image:url("../..//migales/client_with_maven/images/sendMessage.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 60px;
+}
+
+.logOutButton{
+    -fx-background-color: transparent;
+    -fx-background-image:url("../..//migales/client_with_maven/images/logout.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 60px; 
+}
+
+.label {
+    -fx-font-size: 20pt;
+    -fx-font-family: "System";
+    -fx-text-fill: white;
+
+}
+
+.labelExit{
+    -fx-font-size: 10pt;
+    -fx-font-family: "System";
+    -fx-text-fill: white;
+}
+
+.labelSendChat{
+    -fx-font-size: 10pt;
+    -fx-font-family: "System";
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: #FFFF00;
+}
+
+.button:pressed, .button:default:hover:pressed {
+    -fx-background-color: white;
+}

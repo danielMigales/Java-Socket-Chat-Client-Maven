@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="476.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.daniel.migales.client_with_maven.PrimaryController">
+   <children>
+      <TabPane fx:id="tabPaneLoginRegister" layoutX="33.0" layoutY="178.0" prefHeight="400.0" prefWidth="416.0" style="-fx-background-color: white;" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="tabLogin" closable="false" text="Login">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="344.0" prefWidth="416.0">
+                     <children>
+                        <Button fx:id="buttonLogin" layoutX="8.0" layoutY="263.0" mnemonicParsing="false" onAction="#login" prefHeight="60.0" prefWidth="400.0" style="-fx-background-color: #5564eb;" text="LOGIN" textFill="#fffdfd">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Button>
+                        <TextField fx:id="textAreaUsernameLogin" layoutX="74.0" layoutY="88.0" prefHeight="40.0" prefWidth="300.0" promptText="Introduzca su nombre de usuario" />
+                        <PasswordField fx:id="textFieldPasswordLogin" layoutX="75.0" layoutY="151.0" prefHeight="40.0" prefWidth="300.0" promptText="Introduzca su contraseÃ±a" />
+                        <Label layoutX="130.0" layoutY="31.0" prefHeight="26.0" prefWidth="155.0" text="Iniciar Sesion">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <ImageView fx:id="imageviewIconUserLogin" fitHeight="40.0" fitWidth="45.0" layoutX="14.0" layoutY="88.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/userIcon.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageviewIconPasswordLogin" fitHeight="40.0" fitWidth="45.0" layoutX="14.0" layoutY="151.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/passwordIcon.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="labelLoginOk" layoutX="98.0" layoutY="214.0" prefHeight="16.0" prefWidth="227.0" textFill="#e81f1f" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <Label layoutX="213.0" layoutY="44.0" prefHeight="100.0" prefWidth="233.0" text="Socket Chat" textAlignment="CENTER" textFill="#1239b9" textOverrun="CENTER_ELLIPSIS" wrapText="true">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imageViewLogo" fitHeight="100.0" fitWidth="160.0" layoutX="33.0" layoutY="44.0" pickOnBounds="true">
+         <image>
+            <Image url="@images/sockets-img.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
