@@ -43,7 +43,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.4</version>
                 <configuration>
-                    <mainClass>com.daniel.migales.client_with_maven.App</mainClass>
+                    <mainClass>com.daniel.migales.client_with_maven.NewMain</mainClass>
                 </configuration>
             </plugin>
             
@@ -56,7 +56,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.daniel.migales.client_with_maven.App</mainClass>
+                            <mainClass>com.daniel.migales.client_with_maven.NewMain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

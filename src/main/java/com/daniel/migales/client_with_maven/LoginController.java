@@ -1,5 +1,8 @@
 package com.daniel.migales.client_with_maven;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,8 +21,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  * FXML Controller class
@@ -27,7 +30,7 @@ import javafx.stage.StageStyle;
  * @author daniel migales puertas
  *
  */
-public class PrimaryController {
+public class LoginController {
 
     @FXML
     private ResourceBundle resources;
@@ -73,19 +76,11 @@ public class PrimaryController {
 
     @FXML
     void initialize() {
-        assert tabPaneLoginRegister != null : "fx:id=\"tabPaneLoginRegister\" was not injected: check your FXML file 'primary.fxml'.";
-        assert tabLogin != null : "fx:id=\"tabLogin\" was not injected: check your FXML file 'primary.fxml'.";
-        assert buttonLogin != null : "fx:id=\"buttonLogin\" was not injected: check your FXML file 'primary.fxml'.";
-        assert textAreaUsernameLogin != null : "fx:id=\"textAreaUsernameLogin\" was not injected: check your FXML file 'primary.fxml'.";
-        assert textFieldPasswordLogin != null : "fx:id=\"textFieldPasswordLogin\" was not injected: check your FXML file 'primary.fxml'.";
-        assert imageviewIconUserLogin != null : "fx:id=\"imageviewIconUserLogin\" was not injected: check your FXML file 'primary.fxml'.";
-        assert imageviewIconPasswordLogin != null : "fx:id=\"imageviewIconPasswordLogin\" was not injected: check your FXML file 'primary.fxml'.";
-        assert labelLoginOk != null : "fx:id=\"labelLoginOk\" was not injected: check your FXML file 'primary.fxml'.";
-        assert tabAyuda != null : "fx:id=\"tabAyuda\" was not injected: check your FXML file 'primary.fxml'.";
-        assert textAreaHelpStart != null : "fx:id=\"textAreaHelpStart\" was not injected: check your FXML file 'primary.fxml'.";
-        assert ChoiBoxHelpStart != null : "fx:id=\"ChoiBoxHelpStart\" was not injected: check your FXML file 'primary.fxml'.";
-        assert imageViewLogo != null : "fx:id=\"imageViewLogo\" was not injected: check your FXML file 'primary.fxml'.";
-
+        assert tabPaneLoginRegister != null : "fx:id=\"tabPaneLoginRegister\" was not injected: check your FXML file 'Login.fxml'.";
+        assert tabLogin != null : "fx:id=\"tabLogin\" was not injected: check your FXML file 'Login.fxml'.";
+        assert buttonLogin != null : "fx:id=\"buttonLogin\" was not injected: check your FXML file 'Login.fxml'.";
+        assert textAreaUsernameLogin != null : "fx:id=\"textAreaUsernameLogin\" was not injected: check your FXML file 'Login.fxml'.";
+        assert textFieldPasswordLogin != null : "fx:id=\"textFieldPasswordLogin\" was not injected: check your FXML file 'Login.fxml'.";
     }
 
     @FXML
@@ -95,28 +90,39 @@ public class PrimaryController {
         //obtencion de los textos
         String username = textAreaUsernameLogin.getText();
         String password = textFieldPasswordLogin.getText();
-        User user = new User(username, password);
 
-        //se llama a la siguiente ventana
-        switchToChat(event,user);
+        if (!username.isEmpty() && (!password.isEmpty())) {
+
+            User user = new User(username, password);
+            //se guardan los datos del login
+            guardarArchivo(user);
+            //se llama a la siguiente ventana
+            switchToChat(event);
+
+        } else {
+            System.out.println("Se necesita introducir texto");
+        }
+
     }
 
     @FXML
-    private void switchToChat(Event event, User user) throws IOException {
+    private void switchToChat(Event event) throws IOException {
         //App.setRoot("secondary"); //lo quito porque me llama a la ventana con el tamaño de la primera
 
         //cerrar ventana
         closeWindow(event);
         //se inicia la ventana de chat instanciando la clase Stage y FXMLLoader
         Stage secondStage = new Stage();
-        FXMLLoader loader = new FXMLLoader(App.class.getResource("secondary.fxml"));
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("Chat.fxml"));
+
         Scene scene = new Scene(loader.load());
         secondStage.setScene(scene);
         //se añaden los parametros de aspecto a la nueva ventana
-        secondStage.initStyle(StageStyle.UTILITY); //aparece el boton minimizar y cerrar en el marco
+        //secondStage.initStyle(StageStyle.UTILITY); //aparece el boton minimizar y cerrar en el marco
         secondStage.setTitle("Java Socket Chat");
-        secondStage.setAlwaysOnTop(true); //siempre encima
+        //secondStage.setAlwaysOnTop(true); //siempre encima
         secondStage.setResizable(false); //no modificable de tamaño
+        secondStage.initModality(Modality.APPLICATION_MODAL);
         secondStage.show();
     }
 
@@ -126,5 +132,32 @@ public class PrimaryController {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
+    }
+
+    public void guardarArchivo(User user) throws IOException {
+
+        //guarda los resultados en un archivo txt
+        String ruta = "user.txt";
+        File file = new File(ruta);
+
+        // Si el archivo no existe es creado
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
+        BufferedWriter bw = null;
+        try {
+            FileWriter fw = new FileWriter(file, false);
+            bw = new BufferedWriter(fw);
+            bw.write(user.username + " " + user.password);
+        } catch (IOException ex) {
+
+        } finally {
+            try {
+                bw.close();
+            } catch (IOException ex2) {
+
+            }
+        }
     }
 }

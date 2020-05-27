@@ -17,6 +17,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import dataPaquete.DataPaquete;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -28,14 +31,14 @@ import javafx.stage.Stage;
  * @author daniel migales puertas
  *
  */
-public class SecondaryController {
+public class ChatController {
 
     //variables para la conexion
     private String SERVER_IP; //cambiar esta variable segun la ip del servidor
     private final int SERVER_PORT = 40000;
-    private final int CLIENT_PORT = 49999; //puerto diferente para que no se cruce si la ejecuto desde el mismo ordenador
+    private final int CLIENT_PORT = 50000; //puerto diferente para que no se cruce si la ejecuto desde el mismo ordenador
 
-     @FXML
+    @FXML
     private ResourceBundle resources;
 
     @FXML
@@ -71,18 +74,18 @@ public class SecondaryController {
     @FXML
     private TextField textFieldIPdestino;
 
-     @FXML
+    @FXML
     void initialize() {
-        assert AnchorPaneChat != null : "fx:id=\"AnchorPaneChat\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert buttonSendChat != null : "fx:id=\"buttonSendChat\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert textAreaWatchMessages != null : "fx:id=\"textAreaWatchMessages\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert textFieldChatUsername != null : "fx:id=\"textFieldChatUsername\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert textFieldChatIPAddress != null : "fx:id=\"textFieldChatIPAddress\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert textFieldWriteArea != null : "fx:id=\"textFieldWriteArea\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert textAreaHostNameChat != null : "fx:id=\"textAreaHostNameChat\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert buttonLogOutChat != null : "fx:id=\"buttonLogOutChat\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert textFieldIP_Server != null : "fx:id=\"textFieldIP_Server\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert textFieldIPdestino != null : "fx:id=\"textFieldIPdestino\" was not injected: check your FXML file 'secondary.fxml'.";
+        assert AnchorPaneChat != null : "fx:id=\"AnchorPaneChat\" was not injected: check your FXML file 'Chat.fxml'.";
+        assert buttonSendChat != null : "fx:id=\"buttonSendChat\" was not injected: check your FXML file 'Chat.fxml'.";
+        assert textAreaWatchMessages != null : "fx:id=\"textAreaWatchMessages\" was not injected: check your FXML file 'Chat.fxml'.";
+        assert textFieldChatUsername != null : "fx:id=\"textFieldChatUsername\" was not injected: check your FXML file 'Chat.fxml'.";
+        assert textFieldChatIPAddress != null : "fx:id=\"textFieldChatIPAddress\" was not injected: check your FXML file 'Chat.fxml'.";
+        assert textFieldWriteArea != null : "fx:id=\"textFieldWriteArea\" was not injected: check your FXML file 'Chat.fxml'.";
+        assert textAreaHostNameChat != null : "fx:id=\"textAreaHostNameChat\" was not injected: check your FXML file 'Chat.fxml'.";
+        assert buttonLogOutChat != null : "fx:id=\"buttonLogOutChat\" was not injected: check your FXML file 'Chat.fxml'.";
+        assert textFieldIP_Server != null : "fx:id=\"textFieldIP_Server\" was not injected: check your FXML file 'Chat.fxml'.";
+        assert textFieldIPdestino != null : "fx:id=\"textFieldIPdestino\" was not injected: check your FXML file 'Chat.fxml'.";
 
         //Al iniciar la escena se realiza lo siguiente:
         getUserInfo();
@@ -93,12 +96,12 @@ public class SecondaryController {
     @FXML
     void sendMessage(ActionEvent event) {
 
-         //obtener el mensaje del los campos de texto de la interfaz
+        //obtener el mensaje del los campos de texto de la interfaz
         var userName = textFieldChatUsername.getText();
         var IPAddress = textFieldChatIPAddress.getText();
         var message = textFieldWriteArea.getText();
         var destinatario = textFieldIPdestino.getText();
-        
+
         //encriptar mensaje
         Cryptography encryption = new Cryptography();
         String cryptoMessage = "";
@@ -110,13 +113,13 @@ public class SecondaryController {
         System.out.println("El mensaje ha sido encriptado antes del envio: " + cryptoMessage);
 
         //se envia encriptado
-         DataPaquete outputData = new DataPaquete(userName, IPAddress, cryptoMessage, destinatario );
+        DataPaquete outputData = new DataPaquete(userName, IPAddress, cryptoMessage, destinatario);
         //System.out.println(mensaje);
 
         try {
-            
+
             SERVER_IP = textFieldIP_Server.getText();
-            
+
             //flujo de informacion y se asocia al socket
             try ( //crear el socket (conector con el servidor)
                     Socket socket = new Socket(SERVER_IP, SERVER_PORT); //flujo de informacion y se asocia al socket
@@ -141,16 +144,26 @@ public class SecondaryController {
 
         //obtener los datos para colocarlos en el las casillas del chat (datos usuario)
         try {
-            //User user = null;
-            //obtener el nombre de usuario
-            //String username = user.getUsername();
-            
-            //obtener direccion IP y el nombre de host y colocarlos
+
+            String username = readUser();//leo el txt para obtener el nombre guardado
+            textFieldChatUsername.setText(username);
+            //obtener direccion IP y el nombre de host
             InetAddress address = InetAddress.getLocalHost();
-            String hostName = address.getHostName();
+            String hostName = address.getHostName(); //nombre de la maquina
+            byte[] IPAddress = address.getAddress(); //direccion ip
+            String sIPAddress = "";
+
+            for (int x = 0; x < IPAddress.length; x++) {
+                if (x > 0) {
+                    sIPAddress += ".";
+                }
+                sIPAddress += IPAddress[x] & 255;
+            }
+            String localIpAddress = address.getHostAddress(); //direccion ip localhost
+
+            //colocarlos en los textfield
             textAreaHostNameChat.setText(hostName);
-            String localIpAddress = address.getHostAddress();
-            textFieldChatIPAddress.setText(localIpAddress);
+            textFieldChatIPAddress.setText(sIPAddress);
 
         } catch (UnknownHostException ex) {
 
@@ -182,7 +195,11 @@ public class SecondaryController {
                         var userName = inputData.getNombreUsuario();
                         var ipAddress = inputData.getDireccionIP();
                         var message = inputData.getMensaje();
-                        var concatenatedMessage = userName + "/" + ipAddress + " dice:\t" + message + "\n";
+
+                        Cryptography decryption = new Cryptography();
+                        String messageDecrypted = decryption.decrypt(message);
+
+                        var concatenatedMessage = userName + "/" + ipAddress + " dice:\t\t" + messageDecrypted + "\n";
                         System.out.println(concatenatedMessage);
 
                         //visualizar los datos en la interfaz
@@ -196,6 +213,7 @@ public class SecondaryController {
                             + " en la aplicacion cliente");
                     System.out.println("No se ha encontrado la clase DataPaquete");
                     System.out.println(ex.getMessage());
+                } catch (Exception ex) {
                 }
             }
         };
@@ -211,11 +229,41 @@ public class SecondaryController {
         stage.close();
 
         stage = new Stage();
-        AnchorPane root = FXMLLoader.load(getClass().getResource("/view/Start.fxml"));
+        AnchorPane root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
 
+    }
+
+    public String readUser() {
+
+        //leo el archivo de texto creado en el login
+        FileReader fr = null;
+        BufferedReader br = null;
+        String username = "";
+
+        try {
+            File file = new File("user.txt");
+            fr = new FileReader(file);
+            br = new BufferedReader(fr);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(" ");
+                username = parts[0];
+                String password = parts[1];
+            }
+        } catch (IOException e) {
+        } finally {
+            try {
+                if (null != fr) {
+                    fr.close();
+                }
+            } catch (IOException e2) {
+            }
+        }
+        return username;
     }
 
 }
